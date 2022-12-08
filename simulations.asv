@@ -1,0 +1,6 @@
+%% Do Simulations for the Paper
+% a) Give input with PLE from 0 to 1.6 with steps of 2
+% b) Give input as a boxcar on top of white noise with isis of 0.5, 1, 1.5
+% and durations 0.5, 1, 1.5 seconds
+% Calculate ACW values in all cases
+%% 
