@@ -18,14 +18,14 @@ for c = 1:ntrials
         noisesource = dsp.ColoredNoise(ple(i), ntime, 1);
         noise = noisesource();
         
-        p.I_ext_E  = zeros([29 ntime]);
+        p.I_ext_E  = zeros([nrois ntime]);
         p.I_ext_E(1,:) = noise;
         
         [v_E, time] = chaudhuri(p);
         
         
         
-        for j = 1:size(v_E, 1)
+        for j = 1:nrois
             acw_0(i, j, c) = acw(v_E(j, :), (1/p.dt)*1000);
         end
     end
@@ -34,3 +34,18 @@ for c = 1:ntrials
 end
 
 save([projectfolder, '\data\acw_0results.mat'], 'acw_0')
+%% Plot the results
+
+means = mean(acw_0, 3);
+ses = std(acw_0, [], 3) / sqrt(ntrials);
+
+figure;
+for i = 1:length(ple)
+    subplot(3, 3, i)
+    errorbar(1:nrois, means(i,:), ses(i,:), 'k')
+    if any(i == [1 4 7]), ylabel('ACW-0'), end
+    if any(i == [7 8 9]), xticks(1:nrois), xticklabels(rois), xtickangle(90), else, xticks([]), end
+    title(['PLE of stimulation: ', num2str(ple(i))])
+    ylim([0 7])
+end
+saveas(gcf, [projectfolder, '\figures\trials.jpg'])
